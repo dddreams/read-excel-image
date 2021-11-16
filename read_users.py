@@ -207,14 +207,12 @@ def saveImg(data,target_path):
 
 
 if __name__ == '__main__':
-    # source_root = 'E:\\read-excel-image\\demo\\demo.xlsx'
-    # target_root = 'E:\\read-excel-image\\target\\'
-    source_root = 'E:\\workspeace\\github\\read-excel-image\\demo\\demo.xlsx'
-    target_root = 'E:\\workspeace\\github\\read-excel-image\\target\\'
+    source_root = 'E:\\read-excel-image\\demo\\demo.xlsx'
+    target_root = 'E:\\read-excel-image\\target\\'
 
     data = read_excel_info(source_root, img_col_index=[3])
     sql_data = saveImg(data, target_root)
-    sql_file = open(r'E:\\workspeace\\github\\read-excel-image\\sql.sql', mode='w', encoding='utf-8')
+    sql_file = open(r'E:\\read-excel-image\\sql.sql', mode='w', encoding='utf-8')
     sql_file.write(''.join(sql_data))
     sql_file.close()
             
