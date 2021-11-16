@@ -1,0 +1,7 @@
+Sub dq()
+Dim shp As Shape
+For Each shp In ActiveSheet.Shapes
+shp.Left = (shp.TopLeftCell.Width - shp.Width) / 2 + shp.TopLeftCell.Left
+shp.Top = (shp.TopLeftCell.Height - shp.Height) / 2 + shp.TopLeftCell.Top
+Next
+End Sub
