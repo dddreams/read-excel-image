@@ -199,7 +199,7 @@ def saveImg(data,target_path):
             s_photo = ''
 
         sql_list = []
-        sql_list.append(" insert into users(name, sex, phone, photo, remark")
+        sql_list.append(" insert into users(name, sex, phone, photo, remark)")
         sql_list.append(" values ('%s', '%s', '%s', '%s', '%s');")
         sql_str = str(''.join(sql_list)) % (s_name, s_sex, s_phone, s_photo, s_remark)
         sql_arr.append(sql_str + '\n')
