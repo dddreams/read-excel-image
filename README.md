@@ -59,10 +59,68 @@ def _f(subElementObj):
 
 ## 6、另一种方式的实现
 
-另一种方式是使用`openpyxl`和`openpyxl_image_loader`库，按行读取，loader 图片进行保存，完整代码见：[https://github.com/dddreams/read-excel-image/blob/master/new_read_data.pyhttps://github.com/dddreams/read-excel-image/blob/master/new_read_data.py](https://github.com/dddreams/read-excel-image/blob/master/new_read_data.pyhttps://github.com/dddreams/read-excel-image/blob/master/new_read_data.py)。
+另一种方式是使用`openpyxl`和`openpyxl_image_loader`库，按行读取，loader 图片进行保存，完整代码见：[new_read_data.py](https://github.com/dddreams/read-excel-image/blob/master/new_read_data.pyhttps://github.com/dddreams/read-excel-image/blob/master/new_read_data.py)。
 
 ## 7、新增的需求
 
+- 循环读取在某个目录下的多个文件))
+  
+  ```python
+  for root, dirs, files in os.walk(source_root):
+    for file in files:
+      print(os.path.join(root, file))
+  ```
 
+- leader 要求照片大于200K不入库，于是添加了压缩图片的功能，我将压缩图片的代码分离了出来[compress_image.py](https://github.com/dddreams/read-excel-image/blob/master/compress_image.py)。
 
+- 将有问题的数据记录下来，写入 Excel，于是有了写入Excel的代码。
+  
+  ```python
+  wb = Workbook()
+  ws = wb.create_sheet("存在问题的数据", 0)
+  index = 1
+  for i in range(len(error_data)):
+    index = index + 1
+    arr_list = error_data[i].split("|")
+    for j in range(len(arr_list)):
+      ws.cell(row = index, column= j+1, value = arr_list[j])
+  wb.save(target_root + '存在问题的数据.xlsx')
+  ```
 
+- 照片使用电话号码命名，并生成日志，写入文件。
+
+## 8、存在的问题
+
+由于原始数据中存在照片未采集的记录，但是提取到的数据中这些记录都有对应的照片，原来`image_loader = SheetImageLoader(ws)`每次读完不会清空字典，所以就会把上一个文件中对应行的照片读取到当前文件的这一行，经过搜索查找发现是`openpyxl-image-loader`的问题，相关`issues`地址：[images should not be static variable of SheetImageLoader](https://github.com/ultr4nerd/openpyxl-image-loader/issues/9) 。所以在每次循环结束将`image_loader` 清空即可，添加这行代码：
+
+```python
+image_loader._images.clear()
+```
+
+## 9、通过VB导出图片
+
+其实提取Excel中的图片可以使用VB实现，直接在Excel的sheet上右键【查看代码】然后粘贴一下代码执行就会将图片导出来，并且能以任一列的值命名。
+
+```vb
+Sub 导出图片()
+    On Error Resume Next
+    MkDir ThisWorkbook.Path & "\图片"
+    For Each pic In ActiveSheet.Shapes
+        If pic.Type = 13 Then
+            RN = pic.TopLeftCell.Offset(0, -3).Value
+            pic.Copy
+            With ActiveSheet.ChartObjects.Add(0, 0, pic.Width, pic.Height).Chart    '创建图片
+                .Parent.Select
+                .Paste
+                .Export ThisWorkbook.Path & "\图片\" & RN & ".jpg"
+                .Parent.Delete
+            End With
+        End If
+    Next
+    MsgBox "导出图片完成！ "
+End Sub
+```
+
+## 10、总结
+
+经过不断的折腾，发现条条大路通罗马才是真理，不管你用什么方式实现，发现问题、解决问题才是最重要的经历。
