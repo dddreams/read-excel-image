@@ -1,0 +1,17 @@
+Sub 导出图片()
+    On Error Resume Next
+    MkDir ThisWorkbook.Path & "\图片"
+    For Each pic In ActiveSheet.Shapes
+        If pic.Type = 13 Then
+            RN = pic.TopLeftCell.Offset(0, -3).Value
+            pic.Copy
+            With ActiveSheet.ChartObjects.Add(0, 0, pic.Width, pic.Height).Chart    '创建图片
+                .Parent.Select
+                .Paste
+                .Export ThisWorkbook.Path & "\图片\" & RN & ".jpg"
+                .Parent.Delete
+            End With
+        End If
+    Next
+    MsgBox "导出图片完成！ "
+End Sub

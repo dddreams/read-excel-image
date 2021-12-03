@@ -126,8 +126,7 @@ def parse_xml(file_name, img_dict, img_feature='img_path'):
             xdr_from = anchor.getElementsByTagName('xdr:from')[0]
             col = xdr_from.childNodes[0].firstChild.data  # 获取标签间的数据
             row = xdr_from.childNodes[2].firstChild.data
-            embed = \
-            anchor.getElementsByTagName('xdr:pic')[0].getElementsByTagName('xdr:blipFill')[0].getElementsByTagName('a:blip')[0].getAttribute('r:embed')  # 获取属性
+            embed = anchor.getElementsByTagName('xdr:pic')[0].getElementsByTagName('xdr:blipFill')[0].getElementsByTagName('a:blip')[0].getAttribute('r:embed')  # 获取属性
             image_info[(int(row), int(col))] = img_dict.get(int(embed.replace('rId', '')), {}).get(img_feature)
 
     sub_twoCellAnchor = element.getElementsByTagName("xdr:twoCellAnchor")
