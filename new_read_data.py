@@ -4,24 +4,10 @@ from openpyxl_image_loader import SheetImageLoader
 import os
 from PIL import Image
 
-# 判断是否是文件和判断文件是否存在
-
-
-def isfile_exist(file_path):
-    if file_path is None:
-        return False
-    if not os.path.isfile(file_path):
-        print("It's not a file or no such file exist ! %s" % file_path)
-        return False
-    else:
-        return True
-
-
 def get_size(file):
     # 获取文件大小:KB
     size = os.path.getsize(file)
     return size / 1024
-
 
 def get_outfile(infile, outfile):
     if outfile:
@@ -29,7 +15,6 @@ def get_outfile(infile, outfile):
     dir, suffix = os.path.splitext(infile)
     outfile = '{}{}'.format(dir, suffix)
     return outfile
-
 
 def compress_image(infile, outfile='', mb=50, step=10, quality=60):
     """不改变图片尺寸压缩到指定大小
@@ -53,7 +38,6 @@ def compress_image(infile, outfile='', mb=50, step=10, quality=60):
         o_size = get_size(outfile)
     return outfile, get_size(outfile)
 
-
 def resize_image(infile, outfile='', x_s=300):
     """修改图片尺寸
     :param infile: 图片源文件
@@ -67,7 +51,6 @@ def resize_image(infile, outfile='', x_s=300):
     out = im.resize((x_s, y_s), Image.ANTIALIAS)
     outfile = get_outfile(infile, outfile)
     out.save(outfile)
-
 
 def read_files(file_path, image_target):
     #wb, ws, image_loader = None, None, None
@@ -145,8 +128,6 @@ if __name__ == '__main__':
     log_file = open(target_root + 'log.txt', mode='w', encoding='utf-8')
     error_file = open(target_root + 'error.txt', mode='w', encoding='utf-8')
 
-    # workbook = xlwt.Workbook(encoding='ascii')
-    # worksheet = workbook.add_sheet('存在问题的数据', cell_overwrite_ok=True)
     wb = Workbook()
     ws = wb.create_sheet("存在问题的数据", 0)
 
